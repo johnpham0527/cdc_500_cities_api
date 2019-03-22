@@ -137,21 +137,20 @@ class MyCensusTract: #this class of objects retrieves and stores data for a give
 
     def fillCDC500CitiesData(self):
         client = Socrata("chronicdata.cdc.gov", 'QoQet97KEDYpMW4x4Manaflkp') #My (John Pham's) access token is QoQet97KEDYpMW4x4Manaflkp
-        jsonText = client.get("47z2-4wuh", where="starts_with(place_tractid,'3651000-36081')", content_type="json", order="place_tractid ASC",limit=1000) #Get all Queens County census tracts
+        censusTractRetrievalString = "place_tractid='3651000-" + self.censusTractNum + "'"
+        censusTract = client.get("47z2-4wuh", where=censusTractRetrievalString, content_type="json", order="place_tractid ASC",limit=1000)
         client.close()
-        for censusTract in jsonText:
-            if censusTract["tractfips"] == self.censusTractNum:
-                self.coreMenCrudePrev = float(censusTract["corem_crudeprev"]) #Model-based estimate for crude prevalence of older adult men aged >=65 years who are up to date on a core set of clinical preventive services: Flu shot past year, PPV shot ever, Colorectal cancer screening, 2016
-                self.coreWomenCrudePrev = float(censusTract["corew_crudeprev"]) #Model-based estimate for crude prevalence of older adult women aged >=65 years who are up to date on a core set of clinical preventive services: Flu shot past year, PPV shot ever, Colorectal cancer screening, and Mammogram past 2 years, 2016
-                self.colonScreenCrudePrev = float(censusTract["colon_screen_crudeprev"]) #Model-based estimate for crude prevalence of fecal occult blood test, sigmoidoscopy, or colonoscopy among adults aged 50–75 years, 2016
-                self.mammoUseCrudePrev = float(censusTract["mammouse_crudeprev"]) #Model-based estimate for crude prevalence of mammography use among women aged 50–74 years, 2016
-                self.teethLostCrudePrev = float(censusTract["teethlost_crudeprev"]) #Model-based estimate for crude prevalence of all teeth lost among adults aged >=65 years, 2016
-                self.geolocation = censusTract["geolocation"] #Latitude, longitude of census tract centroid
-                self.coreMenPercentage = self.coreMenCrudePrev / self.totalMales65Plus * 100 #save this value as a number in the range of 0-100
-                self.coreWomenPercentage = self.coreWomenCrudePrev / self.totalFemales65Plus * 100 #save this value as a number in the range of 0-100
-                self.mammoUsePercentage = self.mammoUseCrudePrev / self.totalFemales50To74 * 100 #save this value as a number in the range of 0-100
-                self.colonScreenPercentage = self.colonScreenCrudePrev / self.totalOlderAdults50To74 * 100 #save this value as a number in the range of 0-100
-                self.teethLostPercentage = self.teethLostCrudePrev / self.totalOlderAdults65Plus * 100 #save this value as a number in the range of 0-100
+        self.coreMenCrudePrev = float(censusTract[0]["corem_crudeprev"]) #Model-based estimate for crude prevalence of older adult men aged >=65 years who are up to date on a core set of clinical preventive services: Flu shot past year, PPV shot ever, Colorectal cancer screening, 2016
+        self.coreWomenCrudePrev = float(censusTract[0]["corew_crudeprev"]) #Model-based estimate for crude prevalence of older adult women aged >=65 years who are up to date on a core set of clinical preventive services: Flu shot past year, PPV shot ever, Colorectal cancer screening, and Mammogram past 2 years, 2016
+        self.colonScreenCrudePrev = float(censusTract[0]["colon_screen_crudeprev"]) #Model-based estimate for crude prevalence of fecal occult blood test, sigmoidoscopy, or colonoscopy among adults aged 50–75 years, 2016
+        self.mammoUseCrudePrev = float(censusTract[0]["mammouse_crudeprev"]) #Model-based estimate for crude prevalence of mammography use among women aged 50–74 years, 2016
+        self.teethLostCrudePrev = float(censusTract[0]["teethlost_crudeprev"]) #Model-based estimate for crude prevalence of all teeth lost among adults aged >=65 years, 2016
+        self.geolocation = censusTract[0]["geolocation"] #Latitude, longitude of census tract centroid
+        self.coreMenPercentage = self.coreMenCrudePrev / self.totalMales65Plus * 100 #save this value as a number in the range of 0-100
+        self.coreWomenPercentage = self.coreWomenCrudePrev / self.totalFemales65Plus * 100 #save this value as a number in the range of 0-100
+        self.mammoUsePercentage = self.mammoUseCrudePrev / self.totalFemales50To74 * 100 #save this value as a number in the range of 0-100
+        self.colonScreenPercentage = self.colonScreenCrudePrev / self.totalOlderAdults50To74 * 100 #save this value as a number in the range of 0-100
+        self.teethLostPercentage = self.teethLostCrudePrev / self.totalOlderAdults65Plus * 100 #save this value as a number in the range of 0-100
 
 
 class MyCensusTractList:

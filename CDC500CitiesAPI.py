@@ -12,4 +12,4 @@ print("Percentage of older females age 65+ who received core preventive services
 print("Percentage of older adults age 50-75 who received a colon screening: " + "{:.1f}".format(NYCHACensusTractsAnalysis.colonScreenPercentage) + "%")
 print("Percentage of older females age 50-74 who received a mammogram: " + "{:.1f}".format(NYCHACensusTractsAnalysis.mammoUsePercentage) + "%")
 print("Percentage of older adults age 65+ who have all teeth lost: " + "{:.1f}".format(NYCHACensusTractsAnalysis.teethLostPercentage) + "%")
-NYCHACensusTractsAnalysis.exportValues("NYCHA_Data2.csv") #output the data to a CSV file
+NYCHACensusTractsAnalysis.exportValues("NYCHA_Data3.csv") #output the data to a CSV file
